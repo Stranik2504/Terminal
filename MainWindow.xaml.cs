@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Terminal.Classes;
 
 namespace Terminal
 {
@@ -23,6 +24,17 @@ namespace Terminal
         public MainWindow()
         {
             InitializeComponent();
+            DevicesManager.AddDisk += Add;
+            DevicesManager.RemoveDisk += rem;
+            DevicesManager.StartLisining();
+        }
+        private void Add(string text)
+        {
+           System.Diagnostics.Debug.WriteLine("add: " + text);
+        }
+        private void rem(string text)
+        {
+            System.Diagnostics.Debug.WriteLine("remove: " + text);
         }
     }
 }
