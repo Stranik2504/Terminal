@@ -9,8 +9,8 @@ public static class Log
     
     private static ILogger CreateLogger() => 
         new LoggerConfiguration()
-        .MinimumLevel.Information()
-        .WriteTo.Console(new CompactJsonFormatter())
+        .WriteTo.Console(new RenderedCompactJsonFormatter())
+        .WriteTo.Debug(new RenderedCompactJsonFormatter())
         .CreateLogger();
 
     static Log()

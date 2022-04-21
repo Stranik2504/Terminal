@@ -30,11 +30,11 @@ namespace Terminal
         }
         private void Add(string text)
         {
-           System.Diagnostics.Debug.WriteLine("add: " + text);
+            Log.Logger.Information("add: {text}", text);
         }
         private void rem(string text)
         {
-            System.Diagnostics.Debug.WriteLine("remove: " + text);
+            Log.Logger.Information("remove: {text}", text);
         }
     }
 }
