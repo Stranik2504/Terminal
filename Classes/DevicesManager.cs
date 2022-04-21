@@ -8,27 +8,29 @@ using System.IO;
 
 namespace Terminal.Classes
 {
-    public class DevisesManager
+    public static class DevicesManager
     {
-        private List<string> _disks = new();
-        private bool _isActive;
+        public static event Action<string> AddDisk;
+        public static event Action<string> RemoveDisk;
+
+        private static List<string> _disks = new();
+
+        private static bool _isActive;
+
         private const int Delay = 1000;
         
-        public event Action<string> AddDisk;
-        public event Action<string> RemoveDisk;
-
-        public void StartLisining()
+        public static void StartLisining()
         {
             _isActive = true;
             new Thread(Update).Start();
         }
 
-        public void StopLisining()
+        public static void StopLisining()
         {
             _isActive = false;
         }
 
-        private void Update()
+        private static void Update()
         {
             while (_isActive)
             {
