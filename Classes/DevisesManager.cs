@@ -8,56 +8,55 @@ using System.IO;
 
 namespace Terminal.Classes
 {
-    internal class DevisesManager
+    public class DevisesManager
     {
-        static DriveInfo[] prevDevices = null;
-        static DriveInfo[] nowDevices;
-        // static int prevAmout = 0;
-        //static int nowAmout = 0;
-        static Action<string> Connected;
-        static void Main(string[] args)
-        {
-            Thread t = new Thread(Test);
-            t.Start();
-            Connected += Test2;
-        }
-        static private void Test2(string text)
-        {
-            Console.WriteLine(text);
-        }
-        static void Test()
-        {
-            prevDevices = DriveInfo.GetDrives();
-            while (true)
-            {
+        private List<string> _disks = new();
+        private bool _isActive;
+        private const int Delay = 1000;
+        
+        public event Action<string> AddDisk;
+        public event Action<string> RemoveDisk;
 
-                nowDevices = DriveInfo.GetDrives();
-                //nowAmout = prevDevices.Length;
-                Thread.Sleep(1000);
-                Console.Clear();
-                try
+        public void StartLisining()
+        {
+            _isActive = true;
+            new Thread(Update).Start();
+        }
+
+        public void StopLisining()
+        {
+            _isActive = false;
+        }
+
+        private void Update()
+        {
+            while (_isActive)
+            {
+                var drives = DriveInfo.GetDrives();
+                var disks = new List<string>();
+
+                foreach (var disk in drives)
                 {
-                    foreach (var nowItem in nowDevices)
+                    disks.Add(disk.Name);
+                        
+                    if (!_disks.Contains(disk.Name))
                     {
-                        bool isFouned = false;
-                        foreach (var prevItem in prevDevices)
-                        {
-                            if (prevItem == nowItem)
-                            {
-                                isFouned = true;
-                            }
-                        }
-                        if (!isFouned)
-                        {
-                            Connected(nowItem.Name);
-                        }
+                        AddDisk?.Invoke(disk.Name);
+                        _disks.Add(disk.Name);
                     }
                 }
-                catch (IOException e)
+
+                for (int i = 0; i < _disks.Count; i++)
                 {
-                    Console.WriteLine(e.GetType().Name);
+                    if (!disks.Contains(_disks[i]))
+                    {
+                        RemoveDisk?.Invoke(_disks[i]);
+                        _disks.RemoveAt(i);
+                        i--;
+                    }
                 }
-                prevDevices = DriveInfo.GetDrives();
+
+                Thread.Sleep(Delay);
             }
         }
     }
