@@ -24,15 +24,25 @@ namespace Terminal
         public MainWindow()
         {
             InitializeComponent();
-            DevicesManager.AddDisk += Add;
-            DevicesManager.RemoveDisk += rem;
+            DevicesManager.AddDisk += AddDisk;
+            DevicesManager.RemoveDisk += RemoveDisk;
             DevicesManager.StartLisining();
+            
+            LoadTheme("Fallout");
+            Frame.NavigationService.Navigate(new Uri("Frames/StartingPage.xaml", UriKind.Relative));
         }
-        private void Add(string text)
+
+        private void LoadTheme(string name)
+        {
+            Background = new ImageBrush() { ImageSource = new BitmapImage(new Uri(Addition.Themes + name + "/Background.png", UriKind.RelativeOrAbsolute)) };
+        }
+        
+        private void AddDisk(string text)
         {
             Log.Logger.Information("add: {text}", text);
         }
-        private void rem(string text)
+        
+        private void RemoveDisk(string text)
         {
             Log.Logger.Information("remove: {text}", text);
         }
