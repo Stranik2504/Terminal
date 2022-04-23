@@ -24,12 +24,14 @@ namespace Terminal
         public MainWindow()
         {
             InitializeComponent();
+            LoadTheme("Fallout");
+            ConfigManager.Load();
+            
             DevicesManager.AddDisk += AddDisk;
             DevicesManager.RemoveDisk += RemoveDisk;
             DevicesManager.StartLisining();
             
-            LoadTheme("Fallout");
-            Frame.NavigationService.Navigate(new Uri("Frames/StartingPage.xaml", UriKind.Relative));
+            Frame.NavigationService.Navigate(new Uri("Frames/TextViewPage.xaml", UriKind.Relative));
         }
 
         private void LoadTheme(string name)

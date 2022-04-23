@@ -9,9 +9,22 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.3.22175.4" />
+      <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
       <PackageReference Include="Serilog" Version="2.11.0-dev-01380" />
       <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.1-dev-00944" />
       <PackageReference Include="Serilog.Sinks.Console" Version="4.0.2-dev-00890" />
       <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Assets\Themes\Fallout\Font.ttf">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Assets\Themes\Fallout\Background.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <Resource Include="Assets\Themes\Fallout\Font.ttf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 </Project>
