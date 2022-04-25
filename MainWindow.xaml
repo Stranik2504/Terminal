@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Terminal"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        WindowStyle="SingleBorderWindow" ResizeMode="NoResize"  
+        WindowStartupLocation="CenterScreen" WindowState="Maximized">
+   
     <Grid>
-        <ListView x:Name="lstB" MouseDoubleClick="lstB_MouseDoubleClick">
-            
-        </ListView>
+        <Frame x:Name="qwe">
+
+        </Frame>
     </Grid>
 </Window>

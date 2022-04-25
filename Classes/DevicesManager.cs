@@ -18,11 +18,13 @@ namespace Terminal.Classes
         private static bool _isActive;
 
         private const int Delay = 1000;
-        
+        private static Thread _thread;
+
         public static void StartLisining()
         {
             _isActive = true;
-            new Thread(Update).Start();
+            _thread = new Thread(Update);
+            _thread.Start();
         }
 
         public static void StopLisining()
@@ -40,7 +42,7 @@ namespace Terminal.Classes
                 foreach (var disk in drives)
                 {
                     disks.Add(disk.Name);
-                        
+
                     if (!_disks.Contains(disk.Name))
                     {
                         AddDisk?.Invoke(disk.Name);
