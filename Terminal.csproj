@@ -26,5 +26,8 @@
       <Resource Include="Assets\Themes\Fallout\Font.ttf">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Resource>
+      <None Update="files\Config.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

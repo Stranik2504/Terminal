@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Terminal.Classes;
+using Terminal.Frames;
 
 namespace Terminal
 {
@@ -21,17 +22,34 @@ namespace Terminal
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string _theme;
+        
         public MainWindow()
         {
+            _theme = "Fallout";
+            
             InitializeComponent();
-            LoadTheme("Fallout");
+            LoadTheme(_theme);
             ConfigManager.Load();
             
             DevicesManager.AddDisk += AddDisk;
             DevicesManager.RemoveDisk += RemoveDisk;
-            DevicesManager.StartLisining();
-            
-            Frame.NavigationService.Navigate(new Uri("Frames/TextViewPage.xaml", UriKind.Relative));
+            /*DevicesManager.StartLisining();
+            DevicesManager.StopLisining();*/
+            WindowStyle = WindowStyle.None;
+            WindowState = WindowState.Maximized;
+            AllowsTransparency = true;
+
+            KeyDown += (obj, e) =>
+            {
+                if (e.Key == Key.Escape)
+                    Close();
+                
+                if (e.Key == Key.R)
+                    Frame.NavigationService.Content.To<TextViewPage>().Relaod();
+            };
+
+            Frame.NavigationService.Navigate(new TextViewPage(Addition.Local + "/Test.txt", _theme));
         }
 
         private void LoadTheme(string name)

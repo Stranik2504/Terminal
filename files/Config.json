@@ -1,0 +1,8 @@
+{
+    "FontSize": 32,
+    "Opacity": 0.8,
+    "TerminalColor": "#09b523",
+    "UsingDelayFastOutput": true,
+    "DelayFastOutput": 100,
+    "SpecialSymbol": "❚"
+}
