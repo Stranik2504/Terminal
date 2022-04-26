@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -14,16 +15,24 @@ public partial class TextViewPage : Page
 {
     private string _filename;
     private string _theme;
+    private bool _update;
+    private Thread _printText;
+    private Mutex _mutex = new();
 
     public TextViewPage(string filename, string theme)
     {
         InitializeComponent();
         LoadTheme(theme);
         LoadParams();
+        
         _filename = filename;
         _theme = theme;
+        Output.Text = ConfigManager.Config.SpecialSymbol;
         
+        Unloaded += (obj, e) => { _update = false; _printText.Interrupt(); };
+
         LoadText();
+        Scroller.Focus();
     }
 
     public void Relaod()
@@ -31,18 +40,34 @@ public partial class TextViewPage : Page
         ConfigManager.Load();
         LoadParams();
         LoadTheme(_theme);
+        
+        _update = false;
+        
+        _mutex?.WaitOne();
+        _printText.Interrupt();
+        Output.Text = ConfigManager.Config.SpecialSymbol;
+        _mutex?.ReleaseMutex();
+
         LoadText();
+        Scroller.Focus();
     }
 
     private void LoadText()
     {
-        new Thread(() =>
+        try
         {
-            using var stream = File.OpenText(_filename);
-            var text = stream.ReadToEnd();
+            _printText = new Thread(() =>
+            {
+                using var stream = File.OpenText(_filename);
+                var text = stream.ReadToEnd();
                 
-            Addition.PrintLines(Output, Dispatcher, (text, ConfigManager.Config.UsingDelayFastOutput ? ConfigManager.Config.DelayFastOutput : 0));
-        }).Start();
+                Addition.PrintLines(Output, Dispatcher, _mutex, (text, ConfigManager.Config.UsingDelayFastOutput ? ConfigManager.Config.DelayFastOutput : 0));
+                UpdateCarriage();
+            });
+        
+            _printText.Start();
+        }
+        catch {}
     }
 
     private void LoadTheme(string name)
@@ -55,5 +80,30 @@ public partial class TextViewPage : Page
         Output.FontSize = ConfigManager.Config.FontSize;
         Output.Opacity = ConfigManager.Config.Opacity;
         Output.Foreground = (Brush)new BrushConverter().ConvertFromString(ConfigManager.Config.TerminalColor)!; 
+    }
+
+    private void UpdateCarriage()
+    {
+        _update = true;
+        
+        new Thread(() =>
+        {
+            while (_update)
+            {
+                _mutex?.WaitOne();
+                
+                Dispatcher.Invoke(() =>
+                {
+                    if (Output.Text.Length > 0 && Output.Text[^1].ToString() == ConfigManager.Config.SpecialSymbol)
+                        Output.Text = Output.Text.Remove(Output.Text.Length - 1);
+                    else
+                        Output.Text += ConfigManager.Config.SpecialSymbol;
+                }, DispatcherPriority.Background);
+                
+                _mutex?.ReleaseMutex();
+                
+                Thread.Sleep((int)ConfigManager.Config.DelayUpdateCarriage);
+            }
+        }).Start();
     }
 }

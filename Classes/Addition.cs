@@ -20,33 +20,31 @@ public static class Addition
         return default;
     }
 
-    public static void PrintLines<T>(T element, Dispatcher dispatcher, params (string Text, uint Delay)[] TextArray) where T : TextBlock
+    public static void PrintLines<T>(T element, Dispatcher dispatcher,
+        params (string Text, uint Delay)[] TextArray) where T : TextBlock
+        => PrintLines(element, dispatcher, default, TextArray);
+
+    public static void PrintLines<T>(T element, Dispatcher dispatcher, Mutex mutex = default, params (string Text, uint Delay)[] TextArray) where T : TextBlock
     {
-        new Thread(() =>
+        foreach ((string Text, uint Delay) in TextArray)
         {
-            dispatcher.Invoke(() =>
+            foreach (var symbol in Text)
             {
-                element.Text = ConfigManager.Config.SpecialSymbol;
-            });
-
-            foreach ((string Text, uint Delay) in TextArray)
-            {
-                foreach (var symbol in Text)
+                mutex?.WaitOne();
+                    
+                dispatcher.Invoke(() =>
                 {
-                    dispatcher.Invoke(() =>
-                    {
+                    if (element.Text.Length > 0 && element.Text[^1].ToString() == ConfigManager.Config.SpecialSymbol)
                         element.Text = element.Text.Insert(element.Text.Length - 1, symbol.ToString());
-                    });
+                    else
+                        element.Text += symbol.ToString();
+                }, DispatcherPriority.Background);
+                    
+                mutex?.ReleaseMutex();
 
-                    if (Delay > 0)
-                        Thread.Sleep((int)Delay);
-                }
+                if (Delay > 0)
+                    Thread.Sleep((int)Delay);
             }
-            
-            dispatcher.Invoke(() =>
-            {
-                element.Text = element.Text.Remove(element.Text.Length - 1);
-            });
-        }).Start();
+        }
     }
 }

@@ -7,5 +7,6 @@ public class Config
     public string TerminalColor { get; set; }
     public bool UsingDelayFastOutput { get; set; }
     public uint DelayFastOutput { get; set; }
+    public uint DelayUpdateCarriage { get; set; }
     public string SpecialSymbol { get; set; }
 }
