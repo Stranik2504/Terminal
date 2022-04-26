@@ -8,7 +8,6 @@
       Title="TextViewPage"
       Margin="50">
     <Grid>
-        <!--VerticalScrollBarVisibility="Disabled"-->
         <ScrollViewer x:Name="Scroller" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
             <TextBlock x:Name="Output" TextWrapping="Wrap"/>
         </ScrollViewer>

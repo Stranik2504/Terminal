@@ -4,6 +4,28 @@
              xmlns:local="clr-namespace:Terminal"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+         <Style x:Key="Blackout" TargetType="Image">
+             <Setter Property="OpacityMask">
+                 <Setter.Value>
+                     <DrawingBrush>
+                         <DrawingBrush.Drawing>
+                             <GeometryDrawing>
+                                 <GeometryDrawing.Brush>
+                                     <RadialGradientBrush>
+                                         <RadialGradientBrush.GradientStops>
+                                             <GradientStop Offset="0" Color="Black" />
+                                             <GradientStop Offset="1.1" Color="Transparent" />
+                                         </RadialGradientBrush.GradientStops>
+                                     </RadialGradientBrush>
+                                 </GeometryDrawing.Brush>
+                                 <GeometryDrawing.Geometry>
+                                     <RectangleGeometry Rect="0.00,0.00 1.0,1.0" />
+                                 </GeometryDrawing.Geometry>
+                             </GeometryDrawing>
+                         </DrawingBrush.Drawing>
+                     </DrawingBrush>
+                 </Setter.Value>
+             </Setter>
+         </Style>
     </Application.Resources>
 </Application>

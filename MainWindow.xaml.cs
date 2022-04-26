@@ -26,35 +26,40 @@ namespace Terminal
         
         public MainWindow()
         {
-            _theme = "Fallout";
-            
             InitializeComponent();
-            LoadTheme(_theme);
             ConfigManager.Load();
+            
+            _theme = ConfigManager.Config.Theme;
+            
+            LoadTheme(_theme);
+            LoadParams();
+
+            Frame.NavigationService.Navigate(new PictureViewPage(@"C:\Users\rund2\Documents\Programming\C#\Terminal\bin\Debug\net6.0-windows\Local\Test.jpg", _theme));
+        }
+
+        private void LoadTheme(string name)
+        {
+            Background = new ImageBrush() { ImageSource = new BitmapImage(new Uri(Addition.Themes + name + "/Background.png", UriKind.RelativeOrAbsolute)) };
+        }
+
+        private void LoadParams()
+        {
+            WindowStyle = WindowStyle.None;
+            WindowState = WindowState.Maximized;
+            ResizeMode = ResizeMode.NoResize;
+            AllowsTransparency = true;
             
             DevicesManager.AddDisk += AddDisk;
             DevicesManager.RemoveDisk += RemoveDisk;
-            /*DevicesManager.StartLisining();
-            DevicesManager.StopLisining();*/
-            WindowStyle = WindowStyle.None;
-            WindowState = WindowState.Maximized;
-            AllowsTransparency = true;
-
+            
             KeyDown += (obj, e) =>
             {
                 if (e.Key == Key.Escape)
                     Close();
                 
                 if (e.Key == Key.R)
-                    Frame.NavigationService.Content.To<TextViewPage>().Relaod();
+                    Frame.NavigationService.Content.To<PictureViewPage>().Reload();
             };
-
-            Frame.NavigationService.Navigate(new TextViewPage(Addition.Local + "/Test.txt", _theme));
-        }
-
-        private void LoadTheme(string name)
-        {
-            Background = new ImageBrush() { ImageSource = new BitmapImage(new Uri(Addition.Themes + name + "/Background.png", UriKind.RelativeOrAbsolute)) };
         }
         
         private void AddDisk(string text)

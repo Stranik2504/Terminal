@@ -35,7 +35,7 @@ public partial class TextViewPage : Page
         Scroller.Focus();
     }
 
-    public void Relaod()
+    public void Reload()
     {
         ConfigManager.Load();
         LoadParams();

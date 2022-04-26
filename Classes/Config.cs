@@ -2,6 +2,7 @@ namespace Terminal.Classes;
 
 public class Config
 {
+    public string Theme { get; set; }
     public ushort FontSize { get; set; }
     public float Opacity { get; set; }
     public string TerminalColor { get; set; }
