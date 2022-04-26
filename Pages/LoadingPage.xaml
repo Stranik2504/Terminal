@@ -11,26 +11,38 @@
         <ResourceDictionary>
 
             <Style x:Key="123" TargetType="{x:Type ListBoxItem}">
-                <Setter Property="Margin" Value="5,3"/>
+                <Setter Property="Margin" Value="5,5,5,5"/>
                 <Setter Property="Padding" Value="5"/>
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListBoxItem}">
+
                             <Border x:Name="brd" Background="{TemplateBinding Background}" 
                                          BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                                <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Tag}" FontSize="20" FontFamily="{TemplateBinding FontFamily}" Background="Transparent" Foreground="{TemplateBinding Foreground}" >
+
+                                    </Label>
+                                    <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                                </Grid>
+
+
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#3337CD37"/>
                                     <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
+                                    <Setter Property="BorderBrush" Value="DarkGreen"/>
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Background" Value="#3337CD37"/>
                                     <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
+                                    <Setter Property="BorderBrush" Value="DarkGreen"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -66,8 +78,9 @@
     <Grid x:Name="MainFild" Background="Transparent" >
 
         <TextBlock TextWrapping="Wrap" x:Name="Print" Background="Transparent"/>
-        <ListBox x:Name="lstB" ItemContainerStyle="{StaticResource 123}" MouseDoubleClick="lstB_MouseDoubleClick"  Background="Transparent" Margin="50" Foreground="Wheat" BorderThickness="0">
-            <ListBoxItem>asdadsada</ListBoxItem>
+        <ListBox x:Name="lstB" KeyboardNavigation.TabNavigation="Cycle" ItemContainerStyle="{StaticResource 123}" MouseDoubleClick="lstB_MouseDoubleClick"  Background="Transparent" Margin="50" Foreground="Wheat" BorderThickness="0">
+            <ListBoxItem Tag="🖼">asdadsaqweqweqweqeqweqeqweqda</ListBoxItem>
+            <!--   📂🖹🖻🖺🖾 🖼  -->
         </ListBox>
     </Grid>
 </Page>

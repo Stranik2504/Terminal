@@ -23,6 +23,7 @@ namespace Terminal.Pages
     /// </summary>
     public partial class LoadingPage : Page
     {
+        private string directory = "";
         public LoadingPage()
         {
             InitializeComponent();
@@ -36,7 +37,9 @@ namespace Terminal.Pages
             lstB.SelectionMode = SelectionMode.Single;
             lstB.ContextMenu = new ContextMenu();
 
-            lstB.PreviewKeyDown += TabDown;
+            lstB.SelectedIndex = 0;
+
+            lstB.PreviewKeyDown += AdditionalKeys;
 
             DevicesManager.StartLisining();
         }
@@ -45,7 +48,12 @@ namespace Terminal.Pages
             Log.Logger.Information("add: {0}", text);
             System.Diagnostics.Debug.WriteLine("add: " + text);
 
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () => lstB.Items.Add(text));
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () => lstB.Items.Add(new ListBoxItem()
+            {
+                Tag = "📂",
+                Content = text,
+                Style = (Style)Resources["123"],
+            }));
 
         }
         private void rem(string text)
@@ -56,55 +64,99 @@ namespace Terminal.Pages
 
         private void lstB_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            string path = (string)(lstB.SelectedItem);
-            string[] allFiles = Directory.GetFiles(path);
-            string temp = "";
+            //MessageBox.Show(lstB.SelectedItem.ToString());
+            string path = (string)(((ListBoxItem)(lstB.SelectedItem)).Content);
+            directory += path + "\\";
+            OpenFolder();
+
+            //MessageBox.Show(directory);
+        }
+        private void OpenFolder()
+        {
+            
+            string[] allFiles;
+            try
+            {
+                allFiles = Directory.GetFiles(directory);
+            }
+            catch (Exception)
+            {
+                allFiles = new string[0];
+            }
+            lstB.Items.Clear();
             for (int i = 0; i < allFiles.Length; i++)
             {
-                //t2 += allFiles[i] + "\n";
-
                 string[] template = allFiles[i].Split('\\');
                 string text = (template[template.Length - 1].Split('.'))[0];
-
-                temp += text + "\n";
-                //bmp = new Bitmap(fullpath);
-
+                string format = (template[template.Length - 1].Split('.'))[1].ToLower();
+                //  🖹🖻🖺
+                ListBoxItem lstBI = new ListBoxItem()
+                {
+                    Content = text,
+                    Style = (Style)Resources["123"],
+                };
+                switch (format)
+                {
+                    case "txt":
+                        lstBI.Tag = "🖹";
+                        break;
+                    case "png":
+                        lstBI.Tag = "🖼";
+                        break;
+                    case "jpg":
+                        lstBI.Tag = "🖼";
+                        break;
+                    case "bmp":
+                        lstBI.Tag = "🖼";
+                        break;
+                    default:
+                        break;
+                }
+                lstB.Items.Add(lstBI);
             }
-            string[] allDirectories = Directory.GetDirectories(path);
-            string temp2 = "";
-            for (int i = 0; i < allFiles.Length; i++)
+            string[] allDirectories;
+            try
             {
-                //t2 += allFiles[i] + "\n";
-                
+                allDirectories = Directory.GetDirectories(directory);
+            }
+            catch (Exception)
+            {
+                allDirectories = new string[0];
+            }
+            for (int i = 0; i < allDirectories.Length; i++)
+            {
                 string[] template = allDirectories[i].Split('\\');
                 string text = (template[template.Length - 1].Split('.'))[0];
                 if (text == "System Volume Information")
                 {
                     continue;
                 }
-                temp2 += text + "\n";
-                //bmp = new Bitmap(fullpath);
+                ListBoxItem lstBI = new ListBoxItem()
+                {
+                    Tag = "📂",
+                    Content = text,
+                    Style = (Style)Resources["123"],
+                };
 
+                lstB.Items.Add(lstBI);
             }
-
-            MessageBox.Show(temp + temp2);
+            lstB.SelectedIndex = 0;
         }
-        private void TabDown(object sender, KeyEventArgs e)
+        private void AdditionalKeys(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
-                case Key.Tab:
-                    if (lstB.SelectedIndex ==  lstB.Items.Count-1)
-                    {
-                        lstB.SelectedIndex = 0;
-                    }
-                    else
-                    {
-                        lstB.SelectedIndex++;
-                    }
-                    break;
                 case Key.Enter:
-                    lstB_MouseDoubleClick(null,null);
+                    lstB_MouseDoubleClick(null, null);
+                    break;
+                case Key.Escape:
+                    //lstB_MouseDoubleClick(null, null); //       e/adsadad/asdsadas/
+                    //directory.Split("/")
+                    directory = directory.Remove(directory.LastIndexOf("\\"));
+                    directory = directory.Remove(directory.LastIndexOf("\\"));
+                    directory += "\\";
+                    //MessageBox.Show(directory);
+                    OpenFolder();
                     break;
                 default:
                     break;
