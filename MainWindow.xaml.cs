@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Terminal.Classes;
+using Terminal.Windows;
 
 namespace Terminal
 {
@@ -27,6 +28,7 @@ namespace Terminal
             DevicesManager.AddDisk += Add;
             DevicesManager.RemoveDisk += rem;
             DevicesManager.StartLisining();
+            new HackWindow().Show();
         }
         private void Add(string text)
         {
